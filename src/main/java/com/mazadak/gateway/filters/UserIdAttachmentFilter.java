@@ -10,15 +10,20 @@ public class UserIdAttachmentFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        // TODO add error handling for invalid/missing token
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             String userId = decodeJwt(token);
 
-            exchange.getRequest()
-                    .mutate()
-                    .header("X-User-ID", userId)
-                    .build();
+            if (userId != null) {
+                exchange.getRequest()
+                        .mutate()
+                        .header("X-User-ID", userId)
+                        .build();
+
+            }
+
         }
 
         return chain.filter(exchange);
