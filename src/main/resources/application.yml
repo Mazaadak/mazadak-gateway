@@ -2,7 +2,7 @@ spring:
   application:
     name: gateway
   config:
-    import: "optional:configserver:http://localhost:9071/"
+    import: "configserver:http://localhost:18071/"
   cloud:
     gateway:
       server:
@@ -14,11 +14,6 @@ spring:
           httpclient:
             connect-timeout: 5000
             response-timeout: 5s
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
 
 info:
   app:
@@ -26,35 +21,6 @@ info:
     description: "Mazadak API Gateway"
     version: "1.0.0"
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-    endpoint:
-        gateway:
-          access: unrestricted
-    info:
-      env:
-        enabled: true
-    metrics:
-      tags:
-        application: ${spring.application.name}
-
-  eureka:
-    instance:
-      prefer-ip-address: true
-    client:
-      fetch-registry: true
-      register-with-eureka: true
-      service-url:
-        defaultZone: http://localhost:9050/eureka/
-
 logging:
   level:
     com.mazadak.gateway: DEBUG
-
-
-server:
-  port: 9090
-
