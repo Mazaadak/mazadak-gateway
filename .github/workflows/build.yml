@@ -1,0 +1,14 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: Mazaadak/.github/.github/workflows/build-and-push.yml@main
+    with:
+      java-version: '21'
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
