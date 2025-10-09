@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    uses: Mazaadak/.github/.github/workflows/build-and-push.yml@main
+    uses: Mazaadak/.github/.github/workflows/java-build-package-push.yml@main
     with:
       java-version: '21'
     secrets:
