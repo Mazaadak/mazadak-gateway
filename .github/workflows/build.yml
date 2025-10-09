@@ -10,5 +10,3 @@ jobs:
     uses: Mazaadak/.github/.github/workflows/java-build-package-push.yml@main
     with:
       java-version: '21'
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
