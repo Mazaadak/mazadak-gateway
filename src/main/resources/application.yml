@@ -9,7 +9,7 @@ spring:
         webflux:
           discovery:
             locator:
-              enabled: true
+              enabled: false
               lower-case-service-id: true
           httpclient:
             connect-timeout: 5000
@@ -75,3 +75,5 @@ info:
 logging:
   level:
     com.mazadak.gateway: DEBUG
+    org.springframework.cloud.gateway: TRACE
+    reactor.netty.http.client: DEBUG
