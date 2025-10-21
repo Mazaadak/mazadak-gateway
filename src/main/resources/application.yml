@@ -2,7 +2,7 @@ spring:
   application:
     name: gateway
   config:
-    import: "configserver:http://localhost:18071/"
+    import: "optional:configserver:http://localhost:18071/"
   cloud:
     gateway:
       server:
@@ -14,12 +14,63 @@ spring:
           httpclient:
             connect-timeout: 5000
             response-timeout: 5s
+          default-filters:
+            - RemoveRequestHeader=Cookie
+          routes:
+            - id: auth
+              uri: lb://user-service
+              predicates:
+                - Path=/auth/**,/users/**
+            - id: product_create
+              uri: lb://gateway-self-handling
+              predicates:
+                - Path=/products
+                - Method=POST
+#              filters:
+            # should add a product creation orchestration filter here
+            - id: product_service_other
+              uri: lb://product-catalog
+              predicates:
+                - Path=/products/**
+              filters:
+                - StripPrefix=1
+
+            - id: auction_service
+              uri: lb://auctions
+              predicates:
+                - Path=/auctions/**,/bids/**
+
+            - id: inventory_service
+              uri: lb://inventory-service
+              predicates:
+                - Path=/inventories/**
+
+            - id: users_proxy
+              uri: lb://user-service
+              predicates:
+                - Path=/auth/**,/users/**
+
+            - id: order_service
+              uri: lb://orders
+              predicates:
+                - Path=/orders/**
+
+            - id: payment_service
+              uri: lb://payment
+              predicates:
+                - Path=/api/payments,/api/onboarding
+
+            - id: cart_service
+              uri: lb://cart-service
+              predicates:
+                - Path=/carts/**
 
 info:
   app:
     name: "gateway"
     description: "Mazadak API Gateway"
     version: "1.0.0"
+
 
 logging:
   level:
