@@ -26,8 +26,6 @@ spring:
               uri: lb://product-catalog
               predicates:
                 - Path=/products/**
-              filters:
-                - StripPrefix=1
 
             - id: auction_service
               uri: lb://auctions
