@@ -9,7 +9,7 @@ spring:
         webflux:
           discovery:
             locator:
-              enabled: true
+              enabled: false
               lower-case-service-id: true
           httpclient:
             connect-timeout: 5000
@@ -30,8 +30,6 @@ spring:
               uri: lb://product-catalog
               predicates:
                 - Path=/products/**
-              filters:
-                - StripPrefix=1
 
             - id: auction_service
               uri: lb://auctions
@@ -69,10 +67,11 @@ info:
     description: "Mazadak API Gateway"
     version: "1.0.0"
 
-
 logging:
   level:
     com.mazadak.gateway: DEBUG
+    org.springframework.cloud.gateway: TRACE
+    reactor.netty.http.client: DEBUG
 
 security:
   jwt:
