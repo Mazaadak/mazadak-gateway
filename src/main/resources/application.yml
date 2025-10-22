@@ -14,15 +14,19 @@ spring:
           httpclient:
             connect-timeout: 5000
             response-timeout: 5s
-          default-filters:
-            - RemoveRequestHeader=Cookie
           routes:
             - id: auth
               uri: lb://user-service
               predicates:
                 - Path=/auth/**,/users/**
-
-            - id: product_service
+            - id: product_create
+              uri: lb://gateway-self-handling
+              predicates:
+                - Path=/products
+                - Method=POST
+#              filters:
+            # should add a product creation orchestration filter here
+            - id: product_service_other
               uri: lb://product-catalog
               predicates:
                 - Path=/products/**
@@ -68,3 +72,7 @@ logging:
     com.mazadak.gateway: DEBUG
     org.springframework.cloud.gateway: TRACE
     reactor.netty.http.client: DEBUG
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:7b5df3c65c867a1ce70ff7b06ae2025c1f6d1d9fbcca48fca5a7345567dba8e4}
