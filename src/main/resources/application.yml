@@ -14,8 +14,6 @@ spring:
           httpclient:
             connect-timeout: 5000
             response-timeout: 5s
-          default-filters:
-            - RemoveRequestHeader=Cookie
           routes:
             - id: auth
               uri: lb://user-service
@@ -75,3 +73,7 @@ info:
 logging:
   level:
     com.mazadak.gateway: DEBUG
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:7b5df3c65c867a1ce70ff7b06ae2025c1f6d1d9fbcca48fca5a7345567dba8e4}
