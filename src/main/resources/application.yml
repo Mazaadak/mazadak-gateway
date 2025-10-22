@@ -21,14 +21,8 @@ spring:
               uri: lb://user-service
               predicates:
                 - Path=/auth/**,/users/**
-            - id: product_create
-              uri: lb://gateway-self-handling
-              predicates:
-                - Path=/products
-                - Method=POST
-#              filters:
-            # should add a product creation orchestration filter here
-            - id: product_service_other
+
+            - id: product_service
               uri: lb://product-catalog
               predicates:
                 - Path=/products/**
@@ -70,7 +64,6 @@ info:
     name: "gateway"
     description: "Mazadak API Gateway"
     version: "1.0.0"
-
 
 logging:
   level:
