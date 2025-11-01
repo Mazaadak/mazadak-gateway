@@ -61,9 +61,8 @@ spring:
             - name: CircuitBreaker
               args:
                 name: default-circuit-breaker
-            - name: Retry
-              args:
-                name: default-retry
+                fallbackUri: forward:/fallback
+
 
 
 info:
@@ -92,6 +91,7 @@ resilience4j:
         failure-rate-threshold: 100
         wait-duration-in-open-state: 30s
         permitted-number-of-calls-in-half-open-state: 1
+        automatic-transition-from-open-to-half-open-enabled: true
   retry:
     instances:
       default-retry:
