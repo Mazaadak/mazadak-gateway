@@ -28,6 +28,10 @@ spring:
               uri: lb://auctions
               predicates:
                 - Path=/auctions/**,/bids/**
+              filters:
+                - name: Bulkhead
+                  args:
+                    - name: auction-bulkhead
 
             - id: inventory_service
               uri: lb://inventory-service
@@ -101,3 +105,8 @@ resilience4j:
         retry-exceptions:
           - java.io.IOException
           - org.springframework.web.client.HttpServerErrorException
+  bulkhead:
+    instances:
+      auction-bulkhead:
+        max-concurrent-calls: 200
+        max-wait-duration: 0
