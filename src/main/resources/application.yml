@@ -3,6 +3,10 @@ spring:
     name: gateway
   config:
     import: "optional:configserver:http://localhost:18071/"
+  data:
+    redis:
+      host: localhost
+      port: 16379
   cloud:
     gateway:
       server:
@@ -62,7 +66,12 @@ spring:
               args:
                 name: default-circuit-breaker
                 fallbackUri: forward:/fallback
-
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@userKeyResolver}"
+                redis-rate-limiter.replenishRate: 20
+                redis-rate-limiter.burstCapacity: 40
+                redis-rate-limiter.requestedTokens: 1
 
 
 info:
@@ -108,5 +117,5 @@ resilience4j:
   bulkhead:
     instances:
       auction-bulkhead:
-        max-concurrent-calls: 200
+        max-concurrent-calls: 500
         max-wait-duration: 0
