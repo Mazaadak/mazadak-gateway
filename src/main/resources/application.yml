@@ -51,6 +51,10 @@ spring:
               uri: lb://orders
               predicates:
                 - Path=/orders/**
+              filters:
+                - name: Bulkhead
+                  args:
+                    - name: order-bulkhead
 
             - id: payment_service
               uri: lb://payment
@@ -66,6 +70,7 @@ spring:
               args:
                 name: default-circuit-breaker
                 fallbackUri: forward:/fallback
+                retry: default-retry
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@userKeyResolver}"
@@ -85,6 +90,8 @@ logging:
     com.mazadak.gateway: DEBUG
     org.springframework.cloud.gateway: TRACE
     reactor.netty.http.client: DEBUG
+    io.github.resilience4j.retry: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
 
 security:
   jwt:
@@ -118,4 +125,9 @@ resilience4j:
     instances:
       auction-bulkhead:
         max-concurrent-calls: 500
-        max-wait-duration: 0
+        max-wait-duration:
+          seconds: 0
+      order-bulkhead:
+        max-concurrent-calls: 250
+        max-wait-duration:
+          seconds: 0
