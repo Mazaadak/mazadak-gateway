@@ -5,10 +5,8 @@ spring:
     import: "optional:configserver:http://localhost:18071/"
   data:
     redis:
-      host: localhost
-      port: 16379
-      connect-timeout: 2s
-      timeout: 1s
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
   cloud:
     gateway:
       server:
@@ -34,10 +32,6 @@ spring:
               uri: lb://auctions
               predicates:
                 - Path=/auctions/**,/bids/**
-              filters:
-                - name: Bulkhead
-                  args:
-                    - name: auction-bulkhead
 
             - id: inventory_service
               uri: lb://inventory-service
@@ -53,10 +47,6 @@ spring:
               uri: lb://orders
               predicates:
                 - Path=/orders/**
-              filters:
-                - name: Bulkhead
-                  args:
-                    - name: order-bulkhead
 
             - id: payment_service
               uri: lb://payment
@@ -72,7 +62,16 @@ spring:
               args:
                 name: default-circuit-breaker
                 fallbackUri: forward:/fallback
-                retry: default-retry
+                timeLimiterConfig:
+                  timeoutDuration: 10s
+            - name: Retry
+              args:
+                retries: 3
+                backoff:
+                  firstBackoff: 500ms
+                  maxBackoff: 4s
+                  factor: 2
+                  basedOnPreviousValue: false
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@userKeyResolver}"
@@ -92,7 +91,6 @@ logging:
     com.mazadak.gateway: DEBUG
     org.springframework.cloud.gateway: TRACE
     reactor.netty.http.client: DEBUG
-    io.github.resilience4j.retry: DEBUG
     io.github.resilience4j.circuitbreaker: DEBUG
 
 security:
@@ -110,26 +108,9 @@ resilience4j:
         wait-duration-in-open-state: 30s
         permitted-number-of-calls-in-half-open-state: 1
         automatic-transition-from-open-to-half-open-enabled: true
-  retry:
+        register-health-indicator: true
+  timelimiter:
     instances:
-      default-retry:
-        max-attempts: 3
-        wait-duration:
-          seconds: 0.5
-        enable-exponential-backoff: true
-        exponential-backoff-multiplier: 2
-        exponential-max-wait-duration:
-          seconds: 2
-        retry-exceptions:
-          - java.io.IOException
-          - org.springframework.web.client.HttpServerErrorException
-  bulkhead:
-    instances:
-      auction-bulkhead:
-        max-concurrent-calls: 500
-        max-wait-duration:
-          seconds: 0
-      order-bulkhead:
-        max-concurrent-calls: 250
-        max-wait-duration:
-          seconds: 0
+      default-circuit-breaker:
+        timeout-duration: 5s
+        cancel-running-future: true
