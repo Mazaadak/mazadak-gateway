@@ -3,56 +3,6 @@ spring:
     name: gateway
   config:
     import: "optional:configserver:http://localhost:18071/"
-  cloud:
-    gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: false
-              lower-case-service-id: true
-          httpclient:
-            connect-timeout: 5000
-            response-timeout: 5s
-          routes:
-            - id: auth
-              uri: lb://user-service
-              predicates:
-                - Path=/auth/**,/users/**,/address/**,/feedback/**
-            - id: product_service
-              uri: lb://product-catalog
-              predicates:
-                - Path=/products/**,/categories/**
-
-            - id: auction_service
-              uri: lb://auctions
-              predicates:
-                - Path=/auctions/**,/bids/**
-
-            - id: inventory_service
-              uri: lb://inventory-service
-              predicates:
-                - Path=/inventories/**
-
-            - id: users_proxy
-              uri: lb://user-service
-              predicates:
-                - Path=/auth/**,/users/**
-
-            - id: order_service
-              uri: lb://orders
-              predicates:
-                - Path=/orders/**
-
-            - id: payment_service
-              uri: lb://payment
-              predicates:
-                - Path=/api/payments/**,/api/onboarding/**
-
-            - id: cart_service
-              uri: lb://cart-service
-              predicates:
-                - Path=/carts/**
 
 info:
   app:
