@@ -192,7 +192,8 @@
                         <image>eclipse-temurin:21-jdk-jammy</image>
                     </from>
                     <to>
-                        <image>ghcr.io/mazaadak/${project.artifactId}</image>
+<!--                        <image>ghcr.io/mazaadak/${project.artifactId}</image>-->
+                        <image>hasalism/${project.artifactId}</image>
                         <tags>
                             <tag>latest</tag>
                         </tags>

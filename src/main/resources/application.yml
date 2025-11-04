@@ -47,7 +47,7 @@ spring:
             - id: payment_service
               uri: lb://payment
               predicates:
-                - Path=/api/payments,/api/onboarding
+                - Path=/api/payments/**,/api/onboarding/**
 
             - id: cart_service
               uri: lb://cart-service
