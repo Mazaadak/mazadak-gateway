@@ -16,6 +16,7 @@ logging:
     org.springframework.cloud.gateway: TRACE
     reactor.netty.http.client: DEBUG
 
+
 security:
   jwt:
     secret: ${JWT_SECRET:7b5df3c65c867a1ce70ff7b06ae2025c1f6d1d9fbcca48fca5a7345567dba8e4}
