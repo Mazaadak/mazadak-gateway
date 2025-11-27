@@ -27,7 +27,7 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         var headers = exchange.getRequest().getHeaders();
 
-        // Remove any preexisting X-User-Id (to avoid spoofing)
+        // remove any preexisting X-User-Id (to avoid spoofing)
         headers.remove("X-User-Id");
 
         List<String> authHeaders = headers.get(AUTH_HEADER);
@@ -38,24 +38,8 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
 
         String token = authHeaders.get(0).substring(7);
 
-        // === DEBUGGING: Decode JWT header & payload manually (no secret needed) ===
-        try {
-            String[] parts = token.split("\\.");
-            if (parts.length >= 2) {
-                String header = new String(Base64.getUrlDecoder().decode(parts[0]));
-                String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
-                log.info("JWT Header: {}", header);
-                log.info("JWT Payload: {}", payload);
-            } else {
-                log.warn("Token doesn't look like a valid JWT (expected 3 parts).");
-            }
-        } catch (Exception e) {
-            log.error("Failed to decode JWT header/payload manually: {}", e.getMessage());
-        }
-        // ==========================================================================
-
         return Mono.fromCallable(() -> {
-                    // Decode and verify token signature using configured JwtDecoder
+                    // decode and verify token signature using configured JwtDecoder
                     Jwt jwt = jwtDecoder.decode(token);
                     return jwt;
                 })
@@ -75,7 +59,7 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
                 })
                 .onErrorResume(ex -> {
                     log.error("Error decoding JWT in Gateway. Request={}, Exception={}", exchange.getRequest().getURI(), ex.getMessage(), ex);
-                    // Pass the request anyway to let downstream handle unauthenticated users
+                    // pass the request anyway to let downstream handle unauthenticated users
                     return chain.filter(exchange);
                 });
     }
