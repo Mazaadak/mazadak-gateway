@@ -10,7 +10,7 @@
 - Actuator endpoints available for health checks and monitoring
 
 ## How to Run
-You can run it via [Docker Compose](https://github.com/Mazaadak/mazadak-infrastructure) or [Kubernetes](https://github.com/Mazaadak/mazadak-k8s/)
+You can run it via [Docker Compose](https://github.com/Mazaadak/mazadak-infrastructure) <!-- or [Kubernetes](https://github.com/Mazaadak/mazadak-k8s/) -->
 
 ## Tech Stack
 - **Spring Boot 3.5.6** (Java 21)
@@ -23,5 +23,5 @@ You can run it via [Docker Compose](https://github.com/Mazaadak/mazadak-infrastr
 - **Micrometer, OpenTelemetry, Alloy, Loki, Prometheus, Tempo, Grafana** - Observability
 
 ## For Further Information
-Refer to [Gateway Wiki Page](https://github.com/Mazaadak/.github/wiki/Gateway).
+Refer to [Gateway Wiki Page](https://github.com/Mazaadak/.github/wiki/API-Gateway).
 
